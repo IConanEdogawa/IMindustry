@@ -1,0 +1,21 @@
+plugins { id 'java' }
+
+group = 'com.iconanedogawa.imindustry'
+version = '0.1.0'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // Add Mindustry dependency if available. Example (adjust version if needed):
+    // compileOnly 'com.github.Anuken:Mindustry:V8-BUILD'
+}
+
+jar {
+    from('mod.json')
+    from('assets') { into 'assets' }
+    manifest { attributes 'Main-Class': 'mymod.MyMod' }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "imindustry",
+  "displayName": "IMindustry",
+  "version": "0.1.0",
+  "description": "Experimental mod repository for Mindustry (IMindustry).",
+  "author": "IConanEdogawa",
+  "main": "mymod.MyMod",
+  "minGameVersion": "8.159.7"
+}

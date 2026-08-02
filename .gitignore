@@ -1,0 +1,6 @@
+# Ignore build and local files
+.gradle/
+build/
+out/
+*.class
+*.log
