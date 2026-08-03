@@ -10,6 +10,10 @@ sourceSets {
     }
 }
 
+ext {
+    mindustryVersion = 'v159.7'
+}
+
 repositories {
     mavenCentral()
     ivy {
@@ -18,7 +22,7 @@ repositories {
             artifact '/[organisation]/[module]/releases/download/[revision]/dependencies.jar'
         }
         metadataSources { artifact() }
-        content { includeVersion('Anuken', 'Mindustry', 'v159.7') }
+        content { includeVersion('Anuken', 'Mindustry', mindustryVersion) }
     }
 }
 
@@ -28,12 +32,24 @@ java {
 }
 
 dependencies {
-    compileOnly 'Anuken:Mindustry:v159.7'
+    compileOnly "Anuken:Mindustry:$mindustryVersion"
 }
 
 jar {
-    archiveFileName = 'IMindustry.jar'
+    archiveFileName = 'IMindustryDesktop.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from sourceSets.main.output
     from('mod.hjson')
+}
+
+tasks.register('deploy') {
+    dependsOn jar
+    doLast {
+        // This will be handled in the workflow with Android SDK
+        copy {
+            from 'build/libs/IMindustryDesktop.jar'
+            into 'build/libs'
+            rename { 'IMindustry.jar' }
+        }
+    }
 }

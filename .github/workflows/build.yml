@@ -22,36 +22,51 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '8.7'
 
-    - name: Build jar
+    - name: Build Desktop jar
       run: gradle jar --no-daemon --stacktrace
 
-    - name: Show jar contents
+    - name: Convert to Android-compatible jar with d8
       run: |
-        echo "=== JAR contents ==="
+        echo "=== Building Android jar with d8 ==="
+        # Find d8
+        D8=$(find $ANDROID_HOME -name d8 | head -n 1)
+        echo "Found d8 at: $D8"
+        
+        # Find android.jar
+        ANDROID_JAR=$(find $ANDROID_HOME/platforms -name android.jar | sort -V | tail -n 1)
+        echo "Found android.jar at: $ANDROID_JAR"
+        
+        # Run d8
+        $D8 --min-api 21 --output build/libs/IMindustry.jar build/libs/IMindustryDesktop.jar --lib $ANDROID_JAR
+        
+        echo "=== Result ==="
+        ls -la build/libs/
         jar tf build/libs/IMindustry.jar || true
-        echo "=== End ==="
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: IMindustry
-        path: build/libs/*.jar
+        path: build/libs/IMindustry.jar
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.2.2
-        name: IMindustry v0.2.2
+        tag_name: v0.2.3
+        name: IMindustry v0.2.3
         body: |
-          Test release v0.2.2
+          Android-compatible build (processed with d8)
 
-          If you still get ClassNotFound, delete the old mod completely before importing.
-        files: build/libs/*.jar
+          Delete old mod before importing.
+        files: build/libs/IMindustry.jar
         draft: false
         prerelease: false
       env:
