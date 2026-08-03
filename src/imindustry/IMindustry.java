@@ -31,13 +31,13 @@ public class IMindustry extends Mod {
     @Override
     public void loadContent() {
 
-        // Radiation status - light DoT, mainly for stacking + death trigger
+        // Light continuous radiation damage + death trigger
         radiation = new StatusEffect("im-radiation"){{
             color = Pal.reactorPurple;
-            damage = 0.04f;              // very light damage over time
-            transitionDamage = 2f;
+            damage = 0.08f;               // small but noticeable DoT
+            transitionDamage = 3f;
             effect = Fx.reactorsmoke;
-            effectChance = 0.04f;        // rare small puffs
+            effectChance = 0.03f;
         }};
 
         // === Duo ===
@@ -93,7 +93,7 @@ public class IMindustry extends Mod {
         ArtilleryBulletType baseHail = (ArtilleryBulletType) hail.ammoTypes.get(Items.graphite);
         float hailDamage = baseHail.damage;
 
-        // Titanium - faster + freeze + blue
+        // Titanium
         ArtilleryBulletType hailTitanium = new ArtilleryBulletType(3.2f, hailDamage * 1.15f);
         hailTitanium.width = 12f;
         hailTitanium.height = 12f;
@@ -110,7 +110,7 @@ public class IMindustry extends Mod {
         hailTitanium.despawnEffect = Fx.hitBulletColor;
         hailTitanium.hitEffect = Fx.hitBulletColor;
 
-        // Thorium - radiation stacks, NO big explosion on hit
+        // Thorium
         ArtilleryBulletType hailThorium = new ArtilleryBulletType(3.0f, hailDamage * 1.15f){
             @Override
             public void hit(mindustry.gen.Bullet b, float x, float y){
@@ -128,42 +128,40 @@ public class IMindustry extends Mod {
         hailThorium.ammoMultiplier = 2f;
         hailThorium.reloadMultiplier = 1f;
         hailThorium.status = radiation;
-        hailThorium.statusDuration = 60f * 6f;   // 6 seconds base duration
-        hailThorium.splashDamage = hailDamage * 0.55f;
-        hailThorium.splashDamageRadius = 20f;
+        hailThorium.statusDuration = 60f * 7f;
+        hailThorium.splashDamage = hailDamage * 0.5f;
+        hailThorium.splashDamageRadius = 18f;
         hailThorium.hitColor = Pal.reactorPurple;
         hailThorium.frontColor = Pal.reactorPurple;
         hailThorium.backColor = Pal.reactorPurple2;
         hailThorium.trailColor = Pal.reactorPurple;
-
-        // Small purple hit only - NO reactor explosion on hit
         hailThorium.hitEffect = Fx.hitBulletColor;
         hailThorium.despawnEffect = Fx.hitBulletColor;
 
         hail.ammoTypes.put(Items.titanium, hailTitanium);
         hail.ammoTypes.put(Items.thorium, hailThorium);
 
-        // === Death explosion (only on death, small fog) ===
+        // === Death explosion: fixed ~2 block radius, small visual ===
         Events.on(UnitDestroyEvent.class, e -> {
             Unit unit = e.unit;
             if(unit == null || !unit.hasEffect(radiation)) return;
 
-            // Scale by remaining duration (rough stacks approximation)
-            float intensity = Mathf.clamp(unit.getDuration(radiation) / (60f * 6f), 0.1f, 1f);
+            // Scale damage a bit by how long the effect lasted, but keep radius fixed
+            float intensity = Mathf.clamp(unit.getDuration(radiation) / (60f * 7f), 0.25f, 1f);
 
-            // Max damage = 1/4 of real reactor (1250), min much smaller
-            float damage = 180f + 1070f * intensity;   // 180 ~ 1250
-            float radius = (2.2f + 4.5f * intensity) * tilesize; // ~2 to ~7 blocks
+            float damage = 120f + 380f * intensity;   // 120 ~ 500 max
+            float radius = 2.1f * tilesize;           // strictly ~2 blocks
 
+            // Damage (affects units and buildings)
             Damage.damage(unit.team, unit.x, unit.y, radius, damage, true, true);
 
-            // Small purple explosion + tiny smoke (about 2 blocks feel)
-            Fx.reactorExplosion.at(unit.x, unit.y, intensity * 0.35f); // scaled down heavily
-            Fx.reactorsmoke.at(unit.x, unit.y, 0.4f);
+            // Small visual - heavily scaled reactor effect + tiny smoke
+            Fx.reactorExplosion.at(unit.x, unit.y, 0.18f);  // very small
+            Fx.reactorsmoke.at(unit.x, unit.y, 0.25f);
 
-            Sounds.explosionReactor.at(unit.x, unit.y, 1.1f, 0.35f + intensity * 0.35f);
+            Sounds.explosion.at(unit.x, unit.y, 1.3f, 0.4f); // quieter, not full reactor sound
 
-            Effect.shake(1.2f * intensity, 6f * intensity, unit.x, unit.y);
+            Effect.shake(0.8f * intensity, 4f, unit.x, unit.y);
         });
     }
 

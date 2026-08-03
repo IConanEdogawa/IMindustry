@@ -45,7 +45,6 @@ jobs:
         cp ../../../mod.json .
         jar cf ../../libs/IMindustry.jar .
         cd ../../..
-        jar tf build/libs/IMindustry.jar
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -56,15 +55,16 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.3.1
-        name: IMindustry v0.3.1
+        tag_name: v0.3.2
+        name: IMindustry v0.3.2
         body: |
-          **Hail Thorium balance pass**
+          **Hail Thorium final balance**
 
-          - No more huge explosion on every hit
-          - Death explosion only (scaled, small fog ~2 blocks)
-          - Much lighter radiation DoT
-          - Titanium remains strong
+          - Death explosion radius fixed to ~2 blocks
+          - Much smaller visual effect
+          - Quieter sound
+          - Damage 120-500 depending on stacks
+          - Light continuous radiation DoT
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar
