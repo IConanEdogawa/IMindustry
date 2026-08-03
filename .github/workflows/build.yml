@@ -55,16 +55,20 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.3.2
-        name: IMindustry v0.3.2
+        tag_name: v0.4.0
+        name: IMindustry v0.4.0
         body: |
-          **Hail Thorium final balance**
+          **Big update**
 
-          - Death explosion radius fixed to ~2 blocks
-          - Much smaller visual effect
-          - Quieter sound
-          - Damage 120-500 depending on stacks
-          - Light continuous radiation DoT
+          ### Hail
+          - Damage now displays correctly in info
+          - Thorium: radiation + death damage in ~2 blocks (no visual explosion)
+          - Titanium: faster + freeze
+
+          ### Scorch
+          - Oil mode: shoots projectiles instead of continuous flame
+          - Leaves fire on impact
+          - Faster fire rate
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar
