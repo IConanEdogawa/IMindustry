@@ -25,9 +25,8 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    - name: Build Desktop jar
+    - name: Build jar
       run: |
-        # Generate wrapper if missing, then build
         gradle wrapper --gradle-version 8.7 || true
         chmod +x ./gradlew
         ./gradlew jar --no-daemon
