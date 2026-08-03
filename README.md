@@ -1,32 +1,40 @@
 # IMindustry
 
-Experimental Mindustry mod project scaffold.
+**IMindustry** — experimental Mindustry Java mod focused on making early/mid game turrets more interesting and useful.
 
-Structure:
-MyMod/
-├── assets/
-│   ├── content/
-│   ├── sprites/
-│   ├── bundles/
-│   ├── sounds/
-│   └── music/
-│
-├── src/
-│   └── mymod/
-│       └── MyMod.java
-│
-├── build.gradle
-├── gradlew
-├── gradle.properties
-└── mod.json
+## Current features
 
-How to build (basic):
-1) Install Java 17+ and Gradle.
-2) From repository root run:
-   ./gradlew jar
+### Duo
+- **Titanium** ammo: 2× damage of Silicon, half fire rate, applies Slow, slightly longer range
+- **Sand** ammo: cheap, lower damage, strong knockback (great for crowd control when stacked)
 
-The resulting jar will contain mod.json and assets and can be placed into Mindustry's mods/ folder.
+### Scatter
+- **Silicon** ammo: homing flak round that bursts into 6 shrapnel fragments on hit (excellent vs fast/clustered air units)
 
-Notes:
-- The build.gradle contains a placeholder for a Mindustry dependency; you may need to add the proper dependency coordinates for your target Mindustry version.
-- If you want me to push compiled artifacts (jar/zip) automatically via GitHub Actions, tell me and I'll add a workflow.
+## Planned
+- Hail: Titanium (faster + freeze) and Thorium (stacking radiation effect → explosion on death, scaled by stacks, max ~1/4 of real Thorium Reactor)
+- Overheat mechanic for Thorium ammo on Hail
+
+## Building
+
+### Desktop only
+```bash
+./gradlew jar
+```
+Output: `build/libs/IMindustryDesktop.jar`
+
+### Cross-platform (Desktop + Android)
+Requires Android SDK + `d8` in PATH.
+```bash
+./gradlew deploy
+```
+Output: `build/libs/IMindustry.jar`
+
+## Installation
+Put the jar into your Mindustry `mods/` folder.
+
+- Desktop: `%AppData%/Mindustry/mods/` (Windows) or `~/.local/share/Mindustry/mods/` (Linux)
+- Android: `Android/data/io.anuke.mindustry/files/mods/`
+
+## Author
+IConanEdogawa

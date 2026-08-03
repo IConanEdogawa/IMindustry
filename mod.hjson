@@ -1,0 +1,8 @@
+name: "imindustry"
+displayName: "IMindustry"
+author: "IConanEdogawa"
+description: "Enhanced early turrets: Duo (Titanium + Sand ammo), Scatter (Silicon homing flak). More coming soon (Hail radiation ammo etc)."
+version: "0.2.0"
+minGameVersion: "159"
+main: "imindustry.IMindustry"
+java: true
