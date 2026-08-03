@@ -36,20 +36,27 @@ jobs:
     - name: Convert to Android-compatible jar with d8
       run: |
         echo "=== Building Android jar with d8 ==="
-        # Find d8
         D8=$(find $ANDROID_HOME -name d8 | head -n 1)
         echo "Found d8 at: $D8"
         
-        # Find android.jar
         ANDROID_JAR=$(find $ANDROID_HOME/platforms -name android.jar | sort -V | tail -n 1)
         echo "Found android.jar at: $ANDROID_JAR"
         
-        # Run d8
-        $D8 --min-api 21 --output build/libs/IMindustry.jar build/libs/IMindustryDesktop.jar --lib $ANDROID_JAR
+        # d8 only processes classes, so we need to re-pack with the metadata files
+        $D8 --min-api 21 --output build/libs/temp_android.jar build/libs/IMindustryDesktop.jar --lib $ANDROID_JAR
         
-        echo "=== Result ==="
+        # Now create final jar with classes from d8 + metadata
+        mkdir -p build/tmp/final
+        cd build/tmp/final
+        jar xf ../../libs/temp_android.jar
+        cp ../../../mod.hjson .
+        cp ../../../mod.json .
+        jar cf ../../libs/IMindustry.jar .
+        cd ../../..
+        
+        echo "=== Final jar contents ==="
+        jar tf build/libs/IMindustry.jar
         ls -la build/libs/
-        jar tf build/libs/IMindustry.jar || true
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -60,10 +67,10 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.2.3
-        name: IMindustry v0.2.3
+        tag_name: v0.2.4
+        name: IMindustry v0.2.4
         body: |
-          Android-compatible build (processed with d8)
+          Android-compatible build with both mod.json and mod.hjson
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar

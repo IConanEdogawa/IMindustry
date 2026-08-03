@@ -40,16 +40,5 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from sourceSets.main.output
     from('mod.hjson')
-}
-
-tasks.register('deploy') {
-    dependsOn jar
-    doLast {
-        // This will be handled in the workflow with Android SDK
-        copy {
-            from 'build/libs/IMindustryDesktop.jar'
-            into 'build/libs'
-            rename { 'IMindustry.jar' }
-        }
-    }
+    from('mod.json')
 }
