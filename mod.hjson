@@ -2,7 +2,7 @@ name: "imindustry"
 displayName: "IMindustry"
 author: "IConanEdogawa"
 description: "Enhanced early turrets: Duo, Scatter, Hail and Scorch (Spore long-range)."
-version: "0.4.2"
+version: "0.4.3"
 minGameVersion: "159"
 main: "imindustry.IMindustry"
 java: true
