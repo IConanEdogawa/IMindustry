@@ -55,20 +55,14 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.4.0
-        name: IMindustry v0.4.0
+        tag_name: v0.4.1
+        name: IMindustry v0.4.1
         body: |
-          **Big update**
+          **Hotfix**
 
-          ### Hail
-          - Damage now displays correctly in info
-          - Thorium: radiation + death damage in ~2 blocks (no visual explosion)
-          - Titanium: faster + freeze
-
-          ### Scorch
-          - Oil mode: shoots projectiles instead of continuous flame
-          - Leaves fire on impact
-          - Faster fire rate
+          - Removed broken Scorch oil code that caused crashes
+          - Hail Titanium + Thorium still work
+          - Death radiation damage (no visual boom)
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar

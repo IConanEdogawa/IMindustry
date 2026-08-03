@@ -18,7 +18,6 @@ import mindustry.graphics.Pal;
 import mindustry.mod.Mod;
 import mindustry.type.StatusEffect;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.LiquidTurret;
 
 import static mindustry.Vars.tilesize;
 
@@ -92,15 +91,13 @@ public class IMindustry extends Mod {
         // ===================== HAIL =====================
         ItemTurret hail = (ItemTurret) Blocks.hail;
 
-        // Keep original ammo intact (so damage shows correctly)
         ArtilleryBulletType originalGraphite = (ArtilleryBulletType) hail.ammoTypes.get(Items.graphite);
-        ArtilleryBulletType originalSilicon = (ArtilleryBulletType) hail.ammoTypes.get(Items.silicon);
 
         float baseDamage = originalGraphite.damage;
         float baseSplash = originalGraphite.splashDamage;
         float baseSplashRad = originalGraphite.splashDamageRadius;
 
-        // Titanium - faster + freeze
+        // Titanium
         ArtilleryBulletType hailTitanium = new ArtilleryBulletType(3.2f, baseDamage * 1.2f);
         hailTitanium.splashDamage = baseSplash * 1.15f;
         hailTitanium.splashDamageRadius = baseSplashRad;
@@ -117,7 +114,7 @@ public class IMindustry extends Mod {
         hailTitanium.hitEffect = Fx.hitBulletColor;
         hailTitanium.despawnEffect = Fx.hitBulletColor;
 
-        // Thorium - radiation + death damage (no visual boom)
+        // Thorium
         ArtilleryBulletType hailThorium = new ArtilleryBulletType(3.0f, baseDamage * 1.25f){
             @Override
             public void hit(Bullet b, float x, float y){
@@ -148,51 +145,18 @@ public class IMindustry extends Mod {
         hail.ammoTypes.put(Items.titanium, hailTitanium);
         hail.ammoTypes.put(Items.thorium, hailThorium);
 
-        // Death damage only (no visual explosion effect)
+        // Death damage only (no visual explosion)
         Events.on(UnitDestroyEvent.class, e -> {
             Unit unit = e.unit;
             if(unit == null || !unit.hasEffect(radiation)) return;
 
             float intensity = Mathf.clamp(unit.getDuration(radiation) / (60f * 8f), 0.2f, 1f);
 
-            float damage = 100f + 350f * intensity; // 100-450
-            float radius = 2.05f * tilesize;        // ~2 blocks
+            float damage = 100f + 350f * intensity;
+            float radius = 2.05f * tilesize;
 
             Damage.damage(unit.team, unit.x, unit.y, radius, damage, true, true);
-            // no Fx.reactorExplosion / no big smoke
         });
-
-        // ===================== SCORCH (Oil mode) =====================
-        // Scorch is a LiquidTurret. We add oil as a special ammo that fires projectiles + fire puddles.
-
-        LiquidTurret scorch = (LiquidTurret) Blocks.scorch;
-
-        // Create a projectile-style bullet for oil mode
-        BasicBulletType scorchOilBullet = new BasicBulletType(4.8f, 18f){{
-            lifetime = 28f;
-            width = 10f;
-            height = 12f;
-            ammoMultiplier = 1f;
-            status = StatusEffects.burning;
-            statusDuration = 60f * 4f;
-            hitEffect = Fx.hitFlameSmall;
-            despawnEffect = Fx.fireSmoke;
-            frontColor = Color.valueOf("ffb380");
-            backColor = Color.valueOf("d06b3a");
-            trailColor = Color.valueOf("ff8c42");
-
-            // Leave fire on hit
-            incendChance = 0.9f;
-            incendSpread = 2.5f;
-            incendAmount = 2;
-        }};
-
-        // Make oil shoot this bullet instead of the default continuous flame behavior
-        // Note: LiquidTurret uses liquid as ammo, so we put it into ammoTypes
-        scorch.ammoTypes.put(Liquids.oil, scorchOilBullet);
-
-        // Slightly faster fire rate feel when using oil (Duo + 25% approximation via reloadMultiplier)
-        scorchOilBullet.reloadMultiplier = 1.25f;
     }
 
     @Override
