@@ -1,0 +1,51 @@
+name: Build and Release Mod
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build Desktop jar
+      run: |
+        chmod +x ./gradlew
+        ./gradlew jar
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: IMindustry
+        path: build/libs/IMindustryDesktop.jar
+
+    - name: Create Release (only on main push)
+      if: github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v0.2.0
+        name: IMindustry v0.2.0
+        body: |
+          First automatic release of IMindustry.
+
+          ### Features
+          - Duo: Titanium + Sand ammo
+          - Scatter: Silicon homing flak
+
+          Download the jar below and put it into your Mindustry mods folder.
+        files: build/libs/IMindustryDesktop.jar
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
