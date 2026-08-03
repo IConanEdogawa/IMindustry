@@ -55,14 +55,16 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.4.1
-        name: IMindustry v0.4.1
+        tag_name: v0.4.2
+        name: IMindustry v0.4.2
         body: |
-          **Hotfix**
+          **Scorch Spore ammo**
 
-          - Removed broken Scorch oil code that caused crashes
-          - Hail Titanium + Thorium still work
-          - Death radiation damage (no visual boom)
+          - Scorch can now use Spore Pods
+          - Same damage as Coal
+          - ~2x range
+
+          Also keeps Duo / Scatter / Hail changes.
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar

@@ -157,6 +157,31 @@ public class IMindustry extends Mod {
 
             Damage.damage(unit.team, unit.x, unit.y, radius, damage, true, true);
         });
+
+        // ===================== SCORCH - Spore ammo =====================
+        ItemTurret scorch = (ItemTurret) Blocks.scorch;
+
+        // Get original coal bullet as base
+        BulletType coalBullet = scorch.ammoTypes.get(Items.coal);
+
+        // Spore: same damage as coal, 2x range
+        BasicBulletType sporeAmmo = new BasicBulletType(coalBullet.speed, coalBullet.damage);
+        sporeAmmo.width = coalBullet.width;
+        sporeAmmo.height = coalBullet.height;
+        sporeAmmo.lifetime = coalBullet.lifetime * 2.1f; // roughly 2x range via lifetime
+        sporeAmmo.ammoMultiplier = coalBullet.ammoMultiplier;
+        sporeAmmo.status = StatusEffects.burning;
+        sporeAmmo.statusDuration = 60f * 4f;
+        sporeAmmo.pierce = true;
+        sporeAmmo.hitEffect = Fx.hitFlameSmall;
+        sporeAmmo.despawnEffect = Fx.none;
+        sporeAmmo.shootEffect = Fx.shootPyraFlame;
+        sporeAmmo.smokeEffect = Fx.none;
+        sporeAmmo.frontColor = Color.valueOf("9e7b4f");
+        sporeAmmo.backColor = Color.valueOf("6b5235");
+        sporeAmmo.rangeOverride = scorch.range * 2.05f; // force 2x range display + behavior
+
+        scorch.ammoTypes.put(Items.sporePod, sporeAmmo);
     }
 
     @Override
