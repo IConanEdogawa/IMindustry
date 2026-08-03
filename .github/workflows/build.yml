@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,33 +22,42 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
     - name: Build Desktop jar
       run: |
+        # Generate wrapper if missing, then build
+        gradle wrapper --gradle-version 8.7 || true
         chmod +x ./gradlew
-        ./gradlew jar
+        ./gradlew jar --no-daemon
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: IMindustry
-        path: build/libs/IMindustryDesktop.jar
+        path: build/libs/*.jar
 
-    - name: Create Release (only on main push)
-      if: github.ref == 'refs/heads/main'
+    - name: Create or Update Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v0.2.0
         name: IMindustry v0.2.0
         body: |
-          First automatic release of IMindustry.
+          **IMindustry** — enhanced early turrets
 
-          ### Features
-          - Duo: Titanium + Sand ammo
-          - Scatter: Silicon homing flak
+          ### Current features
+          - **Duo**: Titanium (2× damage + Slow) + Sand (strong knockback)
+          - **Scatter**: Silicon (homing + 6 shrapnel fragments)
 
-          Download the jar below and put it into your Mindustry mods folder.
-        files: build/libs/IMindustryDesktop.jar
+          ### How to install
+          1. Download the `.jar` from Assets below
+          2. Put it into your Mindustry `mods/` folder
+
+          Or simply paste the repository link in Mindustry → Import mod → GitHub
+        files: build/libs/*.jar
         draft: false
         prerelease: false
+        generate_release_notes: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
