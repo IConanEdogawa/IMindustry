@@ -1,8 +1,8 @@
 name: "imindustry"
 displayName: "IMindustry"
 author: "IConanEdogawa"
-description: "Enhanced early turrets: Duo (Titanium + Sand ammo), Scatter (Silicon homing flak). More coming soon."
-version: "0.2.1"
+description: "Enhanced early turrets: Duo (Titanium + Sand ammo), Scatter (Silicon homing flak)."
+version: "0.2.2"
 minGameVersion: "159"
 main: "imindustry.IMindustry"
 java: true

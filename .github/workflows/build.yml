@@ -30,8 +30,11 @@ jobs:
     - name: Build jar
       run: gradle jar --no-daemon --stacktrace
 
-    - name: List built files
-      run: ls -la build/libs/
+    - name: Show jar contents
+      run: |
+        echo "=== JAR contents ==="
+        jar tf build/libs/IMindustry.jar || true
+        echo "=== End ==="
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -39,23 +42,15 @@ jobs:
         name: IMindustry
         path: build/libs/*.jar
 
-    - name: Create or Update Release
+    - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.2.0
-        name: IMindustry v0.2.0
+        tag_name: v0.2.2
+        name: IMindustry v0.2.2
         body: |
-          **IMindustry** — enhanced early turrets
+          Test release v0.2.2
 
-          ### Current features
-          - **Duo**: Titanium (2× damage + Slow) + Sand (strong knockback)
-          - **Scatter**: Silicon (homing + 6 shrapnel fragments)
-
-          ### How to install
-          1. Download the `.jar` from Assets below
-          2. Put it into your Mindustry `mods/` folder
-
-          Or simply paste the repository link in Mindustry → Import mod → GitHub
+          If you still get ClassNotFound, delete the old mod completely before importing.
         files: build/libs/*.jar
         draft: false
         prerelease: false
