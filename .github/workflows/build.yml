@@ -24,12 +24,14 @@ jobs:
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.7'
 
     - name: Build jar
-      run: |
-        gradle wrapper --gradle-version 8.7 || true
-        chmod +x ./gradlew
-        ./gradlew jar --no-daemon
+      run: gradle jar --no-daemon --stacktrace
+
+    - name: List built files
+      run: ls -la build/libs/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -57,6 +59,5 @@ jobs:
         files: build/libs/*.jar
         draft: false
         prerelease: false
-        generate_release_notes: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
