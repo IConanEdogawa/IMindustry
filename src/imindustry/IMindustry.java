@@ -2,7 +2,7 @@ package imindustry;
 
 import arc.graphics.Color;
 import mindustry.content.*;
-import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BasicBulletType;
 import mindustry.mod.Mod;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 
@@ -15,67 +15,61 @@ public class IMindustry extends Mod {
         BasicBulletType siliconBullet = (BasicBulletType) duo.ammoTypes.get(Items.silicon);
         float baseRange = duo.range;
 
-        // Titanium: heavy, slow, mid-game "second wind" shot
-        // Half fire rate, double damage of silicon, applies Slow
-        BasicBulletType titanBullet = new BasicBulletType(4.5f, siliconBullet.damage * 2f) {{
-            width = 7f;
-            height = 10f;
-            lifetime = 40f;
-            reloadMultiplier = 0.5f;
-            status = StatusEffects.slow;
-            statusDuration = 90f;
-            rangeOverride = baseRange + 16f;
-            hitColor = Color.valueOf("8da1e3");
-            trailColor = Color.valueOf("8da1e3");
-            frontColor = Color.valueOf("8da1e3");
-            backColor = Color.valueOf("5c6ea3");
-        }};
+        // Titanium: 2x damage, half fire rate, Slow, slightly longer range
+        BasicBulletType titanBullet = new BasicBulletType(4.5f, siliconBullet.damage * 2f);
+        titanBullet.width = 7f;
+        titanBullet.height = 10f;
+        titanBullet.lifetime = 40f;
+        titanBullet.reloadMultiplier = 0.5f;
+        titanBullet.status = StatusEffects.slow;
+        titanBullet.statusDuration = 90f;
+        titanBullet.rangeOverride = baseRange + 16f;
+        titanBullet.hitColor = Color.valueOf("8da1e3");
+        titanBullet.trailColor = Color.valueOf("8da1e3");
+        titanBullet.frontColor = Color.valueOf("8da1e3");
+        titanBullet.backColor = Color.valueOf("5c6ea3");
 
-        // Sand: cheap, average damage, strong knockback for crowd control
-        BasicBulletType sandBullet = new BasicBulletType(4f, siliconBullet.damage * 0.6f) {{
-            lifetime = 35f;
-            knockback = 1.4f;
-            rangeOverride = baseRange + 16f;
-            hitColor = Color.valueOf("f7cba4");
-            trailColor = Color.valueOf("f7cba4");
-            frontColor = Color.valueOf("f7cba4");
-            backColor = Color.valueOf("c9986f");
-        }};
+        // Sand: cheap, lower damage, strong knockback
+        BasicBulletType sandBullet = new BasicBulletType(4f, siliconBullet.damage * 0.6f);
+        sandBullet.lifetime = 35f;
+        sandBullet.knockback = 1.4f;
+        sandBullet.rangeOverride = baseRange + 16f;
+        sandBullet.hitColor = Color.valueOf("f7cba4");
+        sandBullet.trailColor = Color.valueOf("f7cba4");
+        sandBullet.frontColor = Color.valueOf("f7cba4");
+        sandBullet.backColor = Color.valueOf("c9986f");
 
         duo.acceptsItems = true;
         duo.ammoTypes.put(Items.titanium, titanBullet);
         duo.ammoTypes.put(Items.sand, sandBullet);
 
         // === Scatter: Silicon ammo ===
-        // Homing flak that bursts into shrapnel on impact
-        BasicBulletType shrapnel = new BasicBulletType(3.5f, 6f) {{
-            lifetime = 18f;
-            width = 3f;
-            height = 4f;
-            hitColor = Color.valueOf("53565c");
-            trailColor = Color.valueOf("53565c");
-            frontColor = Color.valueOf("53565c");
-            backColor = Color.valueOf("2f3134");
-            collidesGround = false;
-        }};
+        BasicBulletType shrapnel = new BasicBulletType(3.5f, 6f);
+        shrapnel.lifetime = 18f;
+        shrapnel.width = 3f;
+        shrapnel.height = 4f;
+        shrapnel.hitColor = Color.valueOf("53565c");
+        shrapnel.trailColor = Color.valueOf("53565c");
+        shrapnel.frontColor = Color.valueOf("53565c");
+        shrapnel.backColor = Color.valueOf("2f3134");
+        shrapnel.collidesGround = false;
 
-        BasicBulletType siliconScatterBullet = new BasicBulletType(5.5f, 10f) {{
-            width = 6f;
-            height = 8f;
-            lifetime = 30f;
-            homingPower = 0.25f;
-            homingRange = 70f;
-            collidesGround = false;
-            fragBullets = 6;
-            fragBullet = shrapnel;
-            fragSpread = 60f;
-            fragVelocityMin = 0.5f;
-            fragVelocityMax = 1.1f;
-            hitColor = Color.valueOf("53565c");
-            trailColor = Color.valueOf("53565c");
-            frontColor = Color.valueOf("53565c");
-            backColor = Color.valueOf("2f3134");
-        }};
+        BasicBulletType siliconScatterBullet = new BasicBulletType(5.5f, 10f);
+        siliconScatterBullet.width = 6f;
+        siliconScatterBullet.height = 8f;
+        siliconScatterBullet.lifetime = 30f;
+        siliconScatterBullet.homingPower = 0.25f;
+        siliconScatterBullet.homingRange = 70f;
+        siliconScatterBullet.collidesGround = false;
+        siliconScatterBullet.fragBullets = 6;
+        siliconScatterBullet.fragBullet = shrapnel;
+        siliconScatterBullet.fragSpread = 60f;
+        siliconScatterBullet.fragVelocityMin = 0.5f;
+        siliconScatterBullet.fragVelocityMax = 1.1f;
+        siliconScatterBullet.hitColor = Color.valueOf("53565c");
+        siliconScatterBullet.trailColor = Color.valueOf("53565c");
+        siliconScatterBullet.frontColor = Color.valueOf("53565c");
+        siliconScatterBullet.backColor = Color.valueOf("2f3134");
 
         ItemTurret scatter = (ItemTurret) Blocks.scatter;
         scatter.ammoTypes.put(Items.silicon, siliconScatterBullet);
