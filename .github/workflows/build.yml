@@ -35,15 +35,9 @@ jobs:
 
     - name: Convert to Android-compatible jar with d8
       run: |
-        echo "=== Building Android jar with d8 ==="
         D8=$(find $ANDROID_HOME -name d8 | head -n 1)
-        echo "Found d8 at: $D8"
-        
         ANDROID_JAR=$(find $ANDROID_HOME/platforms -name android.jar | sort -V | tail -n 1)
-        echo "Found android.jar at: $ANDROID_JAR"
-        
         $D8 --min-api 21 --output build/libs/temp_android.jar build/libs/IMindustryDesktop.jar --lib $ANDROID_JAR
-        
         mkdir -p build/tmp/final
         cd build/tmp/final
         jar xf ../../libs/temp_android.jar
@@ -51,10 +45,7 @@ jobs:
         cp ../../../mod.json .
         jar cf ../../libs/IMindustry.jar .
         cd ../../..
-        
-        echo "=== Final jar contents ==="
         jar tf build/libs/IMindustry.jar
-        ls -la build/libs/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -65,14 +56,15 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.3.0
-        name: IMindustry v0.3.0
+        tag_name: v0.3.1
+        name: IMindustry v0.3.1
         body: |
-          **Hail update**
+          **Hail Thorium balance pass**
 
-          - Duo: Titanium + Sand
-          - Scatter: Silicon homing flak
-          - Hail: Titanium (faster + freeze) + Thorium (radiation stacks + death explosion)
+          - No more huge explosion on every hit
+          - Death explosion only (scaled, small fog ~2 blocks)
+          - Much lighter radiation DoT
+          - Titanium remains strong
 
           Delete old mod before importing.
         files: build/libs/IMindustry.jar

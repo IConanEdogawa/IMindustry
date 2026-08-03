@@ -2,8 +2,8 @@
   "name": "imindustry",
   "displayName": "IMindustry",
   "author": "IConanEdogawa",
-  "description": "Enhanced early turrets: Duo, Scatter and Hail (Titanium + Thorium with radiation).",
-  "version": "0.3.0",
+  "description": "Enhanced early turrets: Duo, Scatter and Hail (Titanium + balanced Thorium radiation).",
+  "version": "0.3.1",
   "minGameVersion": "159",
   "main": "imindustry.IMindustry",
   "java": true
